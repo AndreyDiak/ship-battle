@@ -6,7 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import Avatar from "../../components/Avatar"
 import Header from "../../components/Header"
 import { auth, db } from "../../firebase"
-import getFriends from "../../utils/getFriends"
+import getFriends from "../../hooks/getFriends"
 
 type Props = {
   data: any
@@ -21,8 +21,6 @@ function ProfilePage({data} : Props) {
 
   const friends = getFriends(isMyProfile)
     
-  console.log(friends)
-
   const user: User = JSON.parse(data)
   
   return (
@@ -57,7 +55,7 @@ function ProfilePage({data} : Props) {
                   <div>
                     <p className="font-bold text-lg">Твои друзья:</p>
                     {friends.map(email => (
-                      <div className="border-b max-w-[240px] 
+                      <div key={email} className="border-b max-w-[240px] 
                       pt-2 pb-2 last:border-none text-center text-gray-500 italic
                       hover:text-gray-700 cursor-pointer hover:bg-white rounded-md mt-2 mb-2">
                         {email}
@@ -93,8 +91,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-
-  console.log(params);
 
   const userRef = doc(db, 'users', `${params?.userId}`);
   const userSnap = await getDoc(userRef);

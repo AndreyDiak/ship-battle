@@ -2,6 +2,7 @@ import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import Popup from '../components/Popup';
 import { auth, db } from "../firebase";
 import '../styles/globals.css';
 import LoadingPage from './loading';
@@ -15,7 +16,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       if (user) {
         await setDoc(doc(db, 'users', user.uid), {
           email: user.email,
-          friends: [],
           displayName: user.displayName,
           lastSeen: serverTimestamp(),
           photoURL: user.photoURL,
@@ -27,10 +27,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     addUser();
   }, []);
 
+
+
   if (loading) return <LoadingPage />
   if (!user) return <LoginPage />
 
-  return <Component {...pageProps} />
+  return (
+    <div className="relative">
+      <Component {...pageProps} />
+    </div>
+  )
 }
 
 export default MyApp

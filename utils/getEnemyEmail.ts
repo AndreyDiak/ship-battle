@@ -1,0 +1,1 @@
+export const getEnemyEmail = (emails: string[], email: string) => emails.filter(item => item !== email)[0]

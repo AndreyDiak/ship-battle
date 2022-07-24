@@ -4,7 +4,6 @@ type Props = {
 }
 
 function Avatar({href} : Props) {
-  console.log(href);
   return (
     <div className="w-10 h-10 rounded-full overflow-hidden">
       {href && (

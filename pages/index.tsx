@@ -1,7 +1,7 @@
 import * as EmailValidator from "email-validator";
 import { signOut } from 'firebase/auth';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -16,7 +16,6 @@ const Home: NextPage = ({usersData} : any) => {
 
   const users: User[] = JSON.parse(usersData);
   const [user, loading] = useAuthState(auth);
-
 
   const addFriend = async () => {
     const friendEmail = prompt('Enter your friend email...');
@@ -40,11 +39,11 @@ const Home: NextPage = ({usersData} : any) => {
       </Head>
       <div className="">
         <Header title='Морской бой' />
-        <div className="mt-5 grid grid grid-cols-1 lg:grid-cols-2 
+        <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 
         max-w-3xl mx-auto lg:place-items-center lg:h-[100vh]">
           <div className="flex flex-col items-center space-y-2">
             <p className="menuItem">
-              <Link href='/find'>
+              <Link href={`/find/${user?.uid}`}>
                 Начать игру
               </Link>
             </p>
@@ -63,7 +62,7 @@ const Home: NextPage = ({usersData} : any) => {
             <div className="flex flex-col items-center space-y-2 mt-4">
               {/* TopList here... */}
               {users.map(user => (
-                <Link href={`/profile/${user.id}`}>
+                <Link href={`/profile/${user.id}`} key={user.id}>
                   <div className="border px-2 py-1 w-[350px]
                   flex space-x-1 items-center rounded-md border-blue-400 cursor-pointer
                   hover:bg-blue-100">
@@ -87,6 +86,7 @@ const Home: NextPage = ({usersData} : any) => {
 }
 
 export default Home
+
 
 export const getStaticProps: GetStaticProps = async () => {
 
