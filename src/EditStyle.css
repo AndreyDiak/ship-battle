@@ -1,0 +1,99 @@
+.editPage {
+  padding-top: 100px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+.editPage__sidebarButton__ships {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.editPage__sidebarButton__shipsButton {
+  padding: 5px 10px;
+  font-size: 20px;
+  border: 1px solid #999999;
+  border-radius: 3px;
+  background-color: #e3e3e3;
+}
+.editPage__sidebarButton__left {
+  margin-top: 30px;
+}
+.editPage__sidebarButton__leftButton {
+  padding: 5px 10px;
+  font-size: 20px;
+  border: 1px solid #999999;
+  border-radius: 3px;
+  background-color: #e3e3e3;
+}
+.editPage__sidebarButton__leftButtons {
+  margin-bottom: 30px;
+  display: flex;
+  column-gap: 15px;
+}
+.editPage__sidebarShips {
+  text-align: left;
+}
+.editPage__sidebarShips__title {
+  margin-bottom: 10px;
+  font-size: 30px;
+  font-weight: 700;
+}
+.editPage__sidebarShips__subtitle {
+  margin-bottom: 30px;
+  font-size: 22px;
+  font-weight: 400;
+}
+.editPage__sidebarShips__block {
+  font-size: 18px;
+}
+.editPage__sidebarShips__blocks {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+.editPage__field {
+  margin: 0 auto;
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  width: 700px;
+}
+.editPage__fieldBlock {
+  width: 70px;
+  height: 70px;
+}
+
+.letter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  font-weight: 700;
+  font-size: 24px;
+}
+.letters {
+  position: absolute;
+  top: -70px;
+  display: flex;
+}
+
+.number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  font-weight: 700;
+  font-size: 24px;
+}
+.numbers {
+  position: absolute;
+  left: -70px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+/*# sourceMappingURL=EditStyle.css.map */

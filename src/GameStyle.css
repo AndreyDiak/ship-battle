@@ -1,0 +1,24 @@
+.gameStartButton {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 400;
+}
+.gameStart {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.field {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 700px;
+}
+.fields {
+  display: flex;
+}
+.fieldBlock {
+  width: 70px;
+  height: 70px;
+}
