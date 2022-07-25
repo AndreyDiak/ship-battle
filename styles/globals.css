@@ -8,4 +8,7 @@
     @apply bg-blue-400 min-w-[200px] max-w-[300px] text-white px-3 py-1 text-center font-semibold 
     rounded-full cursor-pointer hover:bg-blue-600 hover:border-blue-400 
   }
+  .editButton {
+    @apply first-letter:px-2 lg:px-4 py-3 text-xl border border-black rounded-sm bg-gray-200
+  }
 }

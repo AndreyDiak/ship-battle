@@ -227,6 +227,7 @@ export const EditField = React.memo(({field, setField, setReady, markupNumbers, 
       </>
     )
   }
+  
   const ShipsRenderBlock = ({ship}) => {
     return (
       <>

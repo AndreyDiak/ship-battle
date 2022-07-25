@@ -10,6 +10,7 @@ import getFriends from "../../hooks/getFriends";
 import LoadingPage from "../loading";
 import {useCollection} from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
+import { getGameSnapWithEmail } from "../../utils/getSnapshot";
 
 type Props = {
   isGameFound: boolean
@@ -19,7 +20,7 @@ const TIME_TO_DENY = 20000;
 
 function FindPage() {
 
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [opponent, setOpponent] = useState('');
   const [isWaitingForOpp, setIsWaitingForOpp] = useState(false);
   const router = useRouter();
@@ -35,9 +36,13 @@ function FindPage() {
 
   let isGameFound = false;
   let isGameApproved = game?.approved;
-
+  
   if (game?.approved === false && game?.owner !== user?.email) {
     isGameFound = true;
+  }
+
+  if (isGameApproved) {
+    router.push(`/edit/${findSnap?.docs[0].id}`)
   }
   // checks if we invited to the game...
   
@@ -69,11 +74,11 @@ function FindPage() {
         const q = doc(db, `games/${gameRef.id}`);
         const ref = await getDoc(q);
         const isApproved = ref.data()?.approved;
-        console.log('checking!')
+
         if (!isApproved) {
           await deleteDoc(doc(db,`games/${gameRef?.id}`));
         } else {
-          router.push(`/game/${gameRef?.id}`);
+          router.push(`/edit/${gameRef?.id}`);
         }
         setIsWaitingForOpp(false);
         clearTimeout(timeout);
@@ -86,26 +91,19 @@ function FindPage() {
   }
 
   const submitGame = async () => {
-    const findRef = query(
-      collection( db, 'games' ),
-      where('users', 'array-contains', user.email)
-    )
-    const gameSnap = await getDocs(findRef);
-    const gameId = gameSnap.docs[0].id;
+   
+    const gameSnapshot = await getGameSnapWithEmail(user?.email as string);
+    const gameId = gameSnapshot.docs[0].id;
     await updateDoc(doc(db, `games/${gameId}`), {
       approved: true
     })
-    router.push(`/game/${gameId}`);
+    router.push(`/edit/${gameId}`);
   }
 
   const rejectGame = async () => {
     
-    const findRef = query(
-      collection( db, 'games' ),
-      where('users', 'array-contains', user.email)
-    )
-    const gameSnap = await getDocs(findRef);
-    const gameId = gameSnap.docs[0].id;
+    const gameSnapshot = await getGameSnapWithEmail(user?.email as string);
+    const gameId = gameSnapshot.docs[0].id;
     await deleteDoc(doc(db, `games/${gameId}`));
    
   }
@@ -167,30 +165,3 @@ function FindPage() {
 }
 
 export default FindPage
-
-// export const getServerSideProps: GetServerSideProps = async ({params}) => {
-
-//   const userRef = doc(db, 'users', `${params?.findId}`)
-//   const userSnap = await getDoc(userRef);
-//   const userEmail = userSnap.data().email;
-  
-//   const findRef = query(
-//     collection( db, 'games' ),
-//     where('users', 'array-contains', userEmail)
-//   )
-  
-//   const gameSnap = await getDocs(findRef)
-//   const game = gameSnap.docs[0]?.data()
-  
-//   let isGameFound = false;
-
-//   if (game?.approved === false && game?.owner !== userEmail) {
-//     isGameFound = true;
-//   }
-
-//   return {
-//     props: {
-//       isGameFound
-//     }
-//   }
-// }

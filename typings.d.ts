@@ -5,3 +5,21 @@ interface User {
   displayName: string
   friends: string[]
 }
+interface Field {
+  value: string
+  isShip: boolean
+  isFree: boolean
+  backlight: boolean
+  health: number
+  shipHealth: number
+  maxHealth: number
+  id: (number | null)[]
+  index: null | number
+}
+
+type ShipType = 'large' | 'big' | 'medium' | 'small'
+interface Ship {
+  type: ShipType
+  left: number
+  length: number
+}

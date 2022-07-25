@@ -36,8 +36,8 @@ const App = React.memo(() => {
   const isReady = isFirstPlayerReady && isSecondPlayerReady
 
   // разметка поля . . .
-  const markupNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  const markupLetters = ['А','Б','В','Г','Д','Е','Ж','З','И','К']
+  const markupNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const markupLetters = ['А','Б','В','Г','Д','Е','Ж','З','И','К'];
 
   return (
     <>
