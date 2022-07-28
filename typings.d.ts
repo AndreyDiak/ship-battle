@@ -16,6 +16,12 @@ interface Field {
   id: (number | null)[]
   index: null | number
 }
+interface Game {
+  approved: boolean
+  owner: string
+  users: string[]
+  startTime: string
+}
 
 type ShipType = 'large' | 'big' | 'medium' | 'small'
 interface Ship {

@@ -66,6 +66,7 @@ function FindPage() {
           users: [user.email, opp],
           owner: user.email,
           approved: false,
+          turn: Math.random() > 0.5 ? user.email : opp,
           startTime: serverTimestamp()
       })
       // создаем сеанс с игрой...

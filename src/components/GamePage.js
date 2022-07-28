@@ -14,10 +14,6 @@ export const GamePage = ({firstPlayerField, secondPlayerField, markupNumbers, ma
   // поле для угадывания второго игрока . . .
   const [secondPlayerOpponentField, setSecondPlayerOpponentField] = useState(Array(100).fill({value: ''}))
 
-  // console.log(firstPlayerField)
-  // console.log('===========')
-  // console.log(secondPlayerField)
-
   return (
     <>
       <div className='game'>
@@ -69,9 +65,6 @@ const RenderButton = (props) => {
   )
 }
 const RenderFields = (props) => {
-
-  // дописать проверку на победу в игре . . . (средне)
-  // дописать на автоматическое зачеркивание клеток после убийства игрока . . . (сложно)
 
   function handleClick(i, field, oppField , setField, setOppField, setAbleToClick) {
 
@@ -218,7 +211,7 @@ const RenderFields = (props) => {
                 handleClick={handleClick}
                 isFirstPlayerTurn={true}
                 oppField={props.secondPlayerField}
-                setField={props.setFirstPlayerOppField}
+                setield={props.setFirstPlayerOppField}
                 setOppField={props.setSecondPlayerField}
               />
             : <RenderField
@@ -240,15 +233,15 @@ const RenderField = (props) => {
 
   const [ableToClick, setAbleToClick] = useState(true)
 
-  // console.log(props.oppField)
-
   return (
     <>
       {props.field.map((field, index) => {
         // если корабль подбит, то закрашиваем клетки с ним . . .
         let isShipDefeated
         if (props.oppField) {
-          isShipDefeated = (props.oppField[index].shipHealth === 0) && (props.oppField[index].maxHealth > 0)
+          isShipDefeated = 
+          (props.oppField[index].shipHealth === 0) && 
+          (props.oppField[index].maxHealth > 0)
         } else {
           isShipDefeated = field.shipHealth === 0 && field.maxHealth > 0
         }

@@ -1,12 +1,19 @@
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import type { AppProps } from 'next/app';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Popup from '../components/Popup';
 import { auth, db } from "../firebase";
 import '../styles/globals.css';
 import LoadingPage from './loading';
 import LoginPage from './login';
+
+const markups = {
+  numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  letters: ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К']
+}
+
+export const MarkupsContext = React.createContext(markups);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading] = useAuthState(auth);
@@ -34,7 +41,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className="relative">
-      <Component {...pageProps} />
+      <MarkupsContext.Provider value={markups}>
+        <Component {...pageProps} />
+      </MarkupsContext.Provider>
     </div>
   )
 }

@@ -1,15 +1,16 @@
 import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../../firebase';
 import { getEnemyEmail } from '../../utils/getEnemyEmail';
 import LoadingPage from '../loading';
 import LoginPage from '../login';
+import { MarkupsContext } from '../_app';
 
 
 
-function GamePage() {
+function EditPage() {
 
   const [user, loading] = useAuthState(auth);
   const [gameData, setGameData] = useState();
@@ -46,8 +47,10 @@ function GamePage() {
   const active = !(ships.reduce((acc, item) => acc + item.left, 0) === 0) // считаем количество оставшихся кораблей . . .
   const [isVertical, setIsVertical] = useState(true);
   // разметка поля . . .
-  const markupNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const markupLetters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
+  const markups = useContext(MarkupsContext);
+
+  // const markupNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // const markupLetters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
 
   const router = useRouter();
 
@@ -64,6 +67,9 @@ function GamePage() {
         id: infoSnap.id,
         ...infoSnap.data()
       })
+      if (!infoSnap.exists) {
+        router.push('/')
+      }
     }
     getGameInfo()
   }, [])
@@ -304,10 +310,11 @@ function GamePage() {
   }
 
   const submitGame = async () => {
-    console.log(field);
+    
     await addDoc(collection(db, 'fields'), {
       owner: user?.email,
-      field: field
+      field: field,
+      shownField: Array(100).fill({value: ''})
     })
     router.push(`/game/${router.query.editId}`);
   }
@@ -322,7 +329,7 @@ function GamePage() {
         <div className={`grid grid-cols-1 lg:grid-cols-3 h-[100vh] w-full place-items-center`}>
           <div className='mx-auto flex relative flex-wrap w-[400px] lg:w-[700px] col-span-2'>
             <div className="absolute -top-[40px] lg:-top-[70px] flex">
-              {markupLetters.map(letter => {
+              {markups.letters.map(letter => {
                 return (
                   <>
                     <div className="flex items-center justify-center 
@@ -334,7 +341,7 @@ function GamePage() {
               })}
             </div>
             <div className="absolute -left-[40px] lg:-left-[70px] flex flex-col flex-wrap">
-              {markupNumbers.map(number => {
+              {markups.numbers.map(number => {
                 return (
                   <>
                     <div className="flex items-center justify-center font-bold
@@ -433,4 +440,4 @@ const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockPr
 })
 
 
-export default GamePage
+export default EditPage
