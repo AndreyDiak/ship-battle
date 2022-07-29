@@ -5,6 +5,14 @@ interface User {
   displayName: string
   friends: string[]
 }
+interface ShownField {
+  value: string
+}
+interface UserFields {
+  owner: string
+  field: Field[]
+  shownField: ShownField[]
+}
 interface Field {
   value: string
   isShip: boolean

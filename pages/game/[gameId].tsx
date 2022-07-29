@@ -6,74 +6,53 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { auth, db } from '../../firebase'
 import { getEnemyEmail } from '../../utils/getEnemyEmail'
+import LoadingPage from '../loading'
 import { MarkupsContext } from '../_app'
 
-type RenderField = {
-  myField?: ShownField[]
-  oppField?: ShownField[]
-  handleClick?: (...args: any[]) => void
-}
-
-type RenderFields = {
-  myField: ShownField[]
-  oppField: ShownField[]
-  user?: User
-}
-
-type ShownField = {
-  value: string
-}
-
-type RenderFieldBlock = {
-  value: string
-  click?: () => void
-  ableToClick: boolean
-  isShipDefeated: boolean
-}
-
-type GamePage = {
-  game: Game
-}
-
 function GamePage({ game }: any) {
+  console.log(game);
   // getting the user data...
   const [user] = useAuthState(auth);
   // getting game data...
   const [gameData, setGameData] = useState(JSON.parse(game));
   const [isMyTurn, setIsMyTurn] = useState(gameData.turn === user?.email);
-  const router = useRouter()
+  const router = useRouter();
+
   if (!gameData) router.push('/');
 
-  const [myFieldSnap] = useCollection(
+  console.log(user?.email);
+
+  const [myFieldsSnap] = useCollection(
     query(
-      collection( db, 'fields' ),
+      collection(db, 'fields'),
       where('owner', '==', user?.email)
     )
   )
-
-  const [oppFieldSnap] = useCollection(
+  console.log(myFieldsSnap);
+  const [oppFieldsSnap] = useCollection(
     query(
-      collection( db ,'fields'),
-      where('owner', '==', getEnemyEmail(gameData.users, user?.email))
+      collection(db, 'fields'),
+      where('owner', '==', getEnemyEmail(gameData.users, user?.email as string))
     )
   )
-  const myField : Field[] = myFieldSnap?.docs[0].data().field;
-  const oppField : Field[] = oppFieldSnap?.docs[0].data().field;
+  if (oppFieldsSnap?.docs.length === 0) return <LoadingPage />
+  // если оба игрока расставили поле то получаем данные о досках игроков...
 
-  console.log(myField)
-  console.log(oppField);
-
+  const myFieldsData = myFieldsSnap?.docs[0].data() as UserFields
+  const oppFieldsData = oppFieldsSnap?.docs[0].data() as UserFields
+  
   return (
     <div className='game'>
       <div className='gameHeader'>
+        {/* @ts-ignore */}
         ИГРА НАЧАЛАСЬ! Ваш соперник - {getEnemyEmail(gameData.users, user?.email)}
         <br />
         {isMyTurn ? 'Ваш ход' : 'Ход соперника...'}
       </div>
       <div>
         <RenderFields
-          myField={myShownField}
-          oppField={oppShownField}
+          myFieldsData={myFieldsData}
+          oppFieldsData={oppFieldsData}
         />
 
       </div>
@@ -92,18 +71,24 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     id: snapshot.id,
     ...snapshot.data()
   }
-
+  
   return {
     props: {
-      game: JSON.stringify(data)
+      game: JSON.stringify(data),
+
     }
   }
 }
 
-const RenderFields = ({ myField, oppField }: RenderFields) => {
+type RenderFieldsProps = {
+  myFieldsData: UserFields
+  oppFieldsData: UserFields
+}
+
+const RenderFields = ({ myFieldsData, oppFieldsData }: RenderFieldsProps) => {
 
   const markups = useContext(MarkupsContext);
-  
+
   function handleClick(i: number) {
 
     // копия нашего поля для угадывания . . .
@@ -187,34 +172,29 @@ const RenderFields = ({ myField, oppField }: RenderFields) => {
 
   }
 
+  console.log(myFieldsData)
+  console.log(oppFieldsData)
+
   return (
     <>
       <div className="fields">
         <div className="field fieldSelf">
           {/* Рендрим свое поле... */}
           <div className="letters">
-            {markups.letters.map(letter => {
-              return (
-                <>
-                  <div className="letter">
-                    {letter}
-                  </div>
-                </>
-              )
-            })}
+            {markups.letters.map(letter =>
+              <div className="letter">
+                {letter}
+              </div>
+            )}
           </div>
           <div className="numbers">
-            {markups.numbers.map(number => {
-              return (
-                <>
-                  <div className="number">
-                    {number}
-                  </div>
-                </>
-              )
-            })}
+            {markups.numbers.map(number =>
+              <div className="number">
+                {number}
+              </div>
+            )}
           </div>
-          <RenderField myField={myField} />
+          <RenderMyField fieldData={myFieldsData} />
         </div>
         <div className="field fieldOpponent">
           <div className="letters">
@@ -240,59 +220,77 @@ const RenderFields = ({ myField, oppField }: RenderFields) => {
             })}
           </div>
           {/* рендрим поле соперника . . . */}
-          <RenderField
-            oppField={oppField}
+          <RenderOppField
+            fieldData={oppFieldsData}
             handleClick={handleClick}
           />
-
         </div>
       </div>
     </>
   )
 }
 
+type RenderMyFieldProps = {
+  fieldData: UserFields
+}
 
-const RenderField = ({ myField, oppField, handleClick }: RenderField) => {
+const RenderMyField = ({ fieldData }: RenderMyFieldProps) => {
 
-  const [ableToClick, setAbleToClick] = useState(true)
+  return <div>
+    {fieldData.field.map(field =>
+      <RenderFieldBlock
+        value={field.value}
+        ableToClick={false}
+        isShipDefeated={field.shipHealth === 0 && field.maxHealth > 0}
+      />
+    )}
+  </div>
+}
 
-  return (
-    <>
-    {myField 
-      ? (
-        myField.map((field, index) => 
-          <RenderFieldBlock 
-            value={field.value}
-            ableToClick={false}
-            isShipDefeated={field.shipHealth === 0 && field.maxHealth > 0}        
-          />
-        )
-      ) 
-      : (
-        oppField?.map((field, index) => 
-          <RenderFieldBlock 
-            value={field.value}
-            ableToClick={ableToClick}
-            isShipDefeated={field.shipHealth === 0 && field.maxHealth > 0}
-            click={() => {
-              setAbleToClick(false);
-              // @ts-ignore
-              handleClick(index)
-            }}
-          />
-        )
+type RenderOppFieldProps = {
+  fieldData: UserFields
+  handleClick: (index: number) => void
+}
+
+const RenderOppField = ({ fieldData, handleClick }: RenderOppFieldProps) => {
+  const [ableToClick, setAbleToClick] = useState(true);
+
+  return <div>
+    {
+      fieldData.shownField.map((field, index) =>
+        <RenderFieldBlock
+          value={field.value}
+          ableToClick={ableToClick}
+          isShipDefeated={
+            fieldData.field[index].shipHealth === 0
+            && fieldData.field[index].maxHealth > 0
+          }
+          click={() => {
+            setAbleToClick(false);
+            handleClick(index)
+          }}
+        />
       )
     }
-    </>
-  )
+  </div>
+}
 
+type RenderFieldBlock = {
+  value: string
+  click?: () => void
+  ableToClick: boolean
+  isShipDefeated: boolean
 }
 
 const RenderFieldBlock = ({ value, click, ableToClick, isShipDefeated }: RenderFieldBlock) => {
 
   return (
     <>
-      <button className='fieldBlock' onClick={click} disabled={!ableToClick} style={isShipDefeated ? { backgroundColor: 'red' } : {}}>
+      <button
+        className={`w-[70px] h-[70px] border border-[#99999] ${isShipDefeated && 'bg-red-500'}`}
+        onClick={click}
+        disabled={!ableToClick}
+      >
         {value}
       </button>
     </>
