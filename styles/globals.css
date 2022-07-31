@@ -6,9 +6,42 @@
 @layer components {
   .menuItem {
     @apply bg-blue-400 min-w-[200px] max-w-[300px] text-white px-3 py-1 text-center font-semibold 
-    rounded-full cursor-pointer hover:bg-blue-600 hover:border-blue-400 
+    rounded-full cursor-pointer hover:bg-blue-600 hover:border-blue-400;
   }
   .editButton {
-    @apply first-letter:px-2 lg:px-4 py-3 text-xl border border-black rounded-sm bg-gray-200
+    @apply first-letter:px-2 lg:px-4 py-3 text-xl border border-black 
+    rounded-sm bg-gray-200;
+  }
+  .popup {
+    @apply absolute grid place-items-center h-[100vh] w-full text-black 
+    rounded-md cursor-pointer after:bg-gray-900 after:absolute after:w-full 
+    after:h-screen after:top-0 after:right-0 after:opacity-75 z-10 overflow-hidden
+  }
+  .markupBlock {
+    @apply flex items-center justify-center 
+    w-[40px] h-[40px] 2xl:w-[70px] 2xl:h-[70px] font-bold text-lg;
+  }
+  .fieldBlock {
+    @apply w-[40px] h-[40px] 2xl:w-[70px] 2xl:h-[70px] border lg:text-xl xl:text-2xl
+  }
+  .lettersLine {
+    @apply absolute flex -top-[40px] 2xl:-top-[70px];
+  }
+  .numbersLine {
+    @apply absolute flex flex-col flex-wrap -left-[40px] 2xl:-left-[70px];
+  }
+  .field {
+    @apply mx-auto grid grid-cols-10 relative
+    max-w-[400px] max-h-[400px] 2xl:max-w-[700px] 2xl:max-h-[700px];
+  }
+  .fields {
+    @apply relative space-y-20 pt-24 grid grid-cols-1
+    2xl:space-y-0 2xl:grid-cols-2 w-full;
+  }
+}
+
+@layer base {
+  * {
+    /* @apply box-border outline outline-lime-200 */
   }
 }

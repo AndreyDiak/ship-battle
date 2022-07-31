@@ -26,8 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           displayName: user.displayName,
           lastSeen: serverTimestamp(),
           photoURL: user.photoURL,
+          wins: 0,
+          loses: 0
         })
-        console.log('User created!')
       }
     }
 

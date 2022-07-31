@@ -20,9 +20,7 @@ function Popup({submitGame, rejectGame, type} : Props) {
 
 
   return (
-    <div className="absolute grid place-items-center h-[100vh] w-full text-black 
-    rounded-md cursor-pointer after:bg-gray-900 after:w-full after:h-full after:absolute 
-    after:opacity-75 z-10">
+    <div className="popup">
       <div className="bg-slate-200 rounded-md px-4 py-3 text-center group z-20">
         <h2 className={`text-4xl font-bold animate-pulse
         ${timer > 10 

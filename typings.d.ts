@@ -29,6 +29,7 @@ interface Game {
   owner: string
   users: string[]
   startTime: string
+  turn: string
 }
 
 type ShipType = 'large' | 'big' | 'medium' | 'small'

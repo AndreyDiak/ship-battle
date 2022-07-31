@@ -1,7 +1,8 @@
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import { auth, db } from '../../firebase';
 import { getEnemyEmail } from '../../utils/getEnemyEmail';
 import LoadingPage from '../loading';
@@ -46,13 +47,18 @@ function EditPage() {
   const [shipIsActive, setShipIsActive] = useState('large')
   const active = !(ships.reduce((acc, item) => acc + item.left, 0) === 0) // считаем количество оставшихся кораблей . . .
   const [isVertical, setIsVertical] = useState(true);
+  const router = useRouter();
+  const [myFieldsSnap] = useCollection(
+    query(
+      collection(db, 'fields'),
+      where('owner', '==', user?.email)
+    )
+  ) // @ts-ignore
+  if (myFieldsSnap?.docs.length > 0) {
+    router.push(`/game/${router.query.editId}`)
+  }
   // разметка поля . . .
   const markups = useContext(MarkupsContext);
-
-  // const markupNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  // const markupLetters = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К'];
-
-  const router = useRouter();
 
   if (loading) return <LoadingPage />
   if (!user) return <LoginPage />
@@ -62,8 +68,7 @@ function EditPage() {
       const infoRef = doc(db, `games/${router.query.editId}`)
       const infoSnap = await getDoc(infoRef);
 
-      setGameData({
-        // @ts-ignore
+      setGameData({ // @ts-ignore
         id: infoSnap.id,
         ...infoSnap.data()
       })
@@ -327,25 +332,23 @@ function EditPage() {
         </div>
       ) : (
         <div className={`grid grid-cols-1 lg:grid-cols-3 h-[100vh] w-full place-items-center`}>
-          <div className='mx-auto flex relative flex-wrap w-[400px] lg:w-[700px] col-span-2'>
-            <div className="absolute -top-[40px] lg:-top-[70px] flex">
+          <div className='field col-span-2'>
+            <div className="lettersLine">
               {markups.letters.map(letter => {
                 return (
                   <>
-                    <div className="flex items-center justify-center 
-                  w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] font-bold text-lg">
+                    <div className="markupBlock">
                       {letter}
                     </div>
                   </>
                 )
               })}
             </div>
-            <div className="absolute -left-[40px] lg:-left-[70px] flex flex-col flex-wrap">
+            <div className="numbersLine">
               {markups.numbers.map(number => {
                 return (
                   <>
-                    <div className="flex items-center justify-center font-bold
-                  w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] text-lg">
+                    <div className="markupBlock">
                       {number}
                     </div>
                   </>
@@ -427,11 +430,15 @@ const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockPr
   return (
     <>
       <button
-        className='w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] border'
+        className={`w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] 
+        border ${field.backlight 
+          ? 'bg-[#fcdbf4]' 
+          : !field.isShip 
+          ? 'bg-[rgb(239,239,239)]' 
+          : 'bg-[rgb(200,200,200)]' }`}
         onClick={click}
         disabled={!active}
         onMouseOver={mouseOver}
-        style={field.backlight ? { backgroundColor: '#fcdbf4' } : {} && !field.isShip ? { backgroundColor: 'rgb(239,239,239)' } : { backgroundColor: 'rgb(200,200,200)' }}
       >
         {field.value}
       </button>
