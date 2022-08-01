@@ -60,8 +60,7 @@ function EditPage() {
   // разметка поля . . .
   const markups = useContext(MarkupsContext);
 
-  if (loading) return <LoadingPage />
-  if (!user) return <LoginPage />
+  
 
   useEffect(() => {
     const getGameInfo = async () => {
@@ -324,6 +323,9 @@ function EditPage() {
     router.push(`/game/${router.query.editId}`);
   }
 
+  if (loading) return <LoadingPage />
+  if (!user) return <LoginPage />
+
   return (
     <div className="">
       {!enemyEmail ? (
@@ -423,7 +425,6 @@ type FieldBlockProp = {
   active: boolean
   mouseOver: () => void
 }
-
 
 const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockProp) => {
 

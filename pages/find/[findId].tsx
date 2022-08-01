@@ -124,9 +124,10 @@ function FindPage() {
           <h2 className="font-bold mt-3 mb-3 text-xl">Игра с друзьями</h2>
           {friends.length > 0 
           ? (
-            <div className="flex-col space-y-2">{friends.map(email => (
+            <div className="flex-col space-y-2">
+              {friends.map((email, index) => (
               <div className="flex-col items-center space-y-2 bg-blue-100
-              px-3 py-1 rounded-md max-w-[450px]">
+              px-3 py-1 rounded-md max-w-[450px]" key={index}>
                 <p className="">
                   {email}
                 </p>

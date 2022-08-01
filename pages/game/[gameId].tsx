@@ -110,7 +110,7 @@ type RenderFieldsProps = {
   isMyTurn: boolean
 }
 
-const RenderFields = ({ myFieldsData, oppFieldsData, isMyTurn }: RenderFieldsProps) => {
+function RenderFields({ myFieldsData, oppFieldsData, isMyTurn }: RenderFieldsProps) {
 
   const markups = useContext(MarkupsContext);
   const router = useRouter();
