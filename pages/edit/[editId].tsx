@@ -430,7 +430,7 @@ const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockPr
   return (
     <>
       <button
-        className={`w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] 
+        className={`w-[40px] h-[40px] 2xl:w-[70px] 2xl:h-[70px] 
         border ${field.backlight 
           ? 'bg-[#fcdbf4]' 
           : !field.isShip 

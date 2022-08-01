@@ -17,10 +17,7 @@ function GamePage({ game }: any) {
   const router = useRouter();
   // getting game data...
   const [gameDataSnap] = useDocument(doc(db, `games/${router.query.gameId}`));
-  // push game data
-  // if (!gameDataSnap) {
-  //   router.push('/')
-  // }
+  
   const gameData = gameDataSnap 
     ? {
       id: gameDataSnap.id,
@@ -28,9 +25,10 @@ function GamePage({ game }: any) {
     } 
     : JSON.parse(game);
   // update turns content...
+
   const isMyTurn = gameData.turn === user?.email
-  
-  if (!gameData) router.push('/');
+  // console.log(gameData)
+  if (!gameData.users) router.push('/');
 
   const [myFieldsSnap] = useCollection(
     query(
@@ -56,16 +54,10 @@ function GamePage({ game }: any) {
   // считаем живые клетки...
   const myTotalHealth = myFieldsData.field.reduce((total, item) => total + item.health, 0);
   const oppTotalHealth = oppFieldsData.field.reduce((total, item) => total + item.health, 0);
-  // если мы убили все корабли то заканичиваем игру...
-  if (myTotalHealth === 0) {
-    console.log('You lose..')
-  }
-  if (oppTotalHealth === 0) {
-    console.log('You win!')
-  }
 
   return (
     <div className='relative'>
+      {/* FinishPopup... */}
       {(myTotalHealth === 0 || oppTotalHealth === 0) && (
         <FinishPopup 
           winner={
@@ -76,12 +68,14 @@ function GamePage({ game }: any) {
           oppFieldId={oppFieldId}
         />
       )}
-      <Header title={isMyTurn ? 'Ваш ход' : 'Ход соперника...'} />
+      {/* Header... */}
+      <Header title={isMyTurn ? 'Ваш ход' : 'Ход соперника...'} color={isMyTurn ? "bg-green-400" : ''} />
       <div className=''>
         {/* @ts-ignore */}
         ИГРА НАЧАЛАСЬ! Ваш соперник - {getEnemyEmail(gameData.users, user?.email)}
       </div>   
       <div>
+        {/* Fields... */}
         <RenderFields
           myFieldsData={myFieldsData}
           oppFieldsData={oppFieldsData}
