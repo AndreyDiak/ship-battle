@@ -16,14 +16,14 @@ function FinishPopup({ winner, gameId, myFieldId, oppFieldId } : Props) {
   const [user] = useAuthState(auth);
   const router = useRouter();
   
-  
+
 
   const onClick = async () => {
     const gameSnap = await getDoc(doc(db, `games/${gameId}`));
     const gameData = gameSnap.data()
     const users = gameData?.users;
 
-    const opp = getEnemyEmail(users, user?.email);
+    const opp = getEnemyEmail(users, user?.email as string);
     router.push('/');
     // TODO добавить сбор статистики...
     await deleteDoc(doc(db, `fields/${myFieldId}`));

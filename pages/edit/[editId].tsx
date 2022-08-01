@@ -94,7 +94,7 @@ function EditPage() {
     // выбор оси . . .
     let axis = isVertical ? 10 : 1
 
-    let cells = []
+    let cells : any[] = []
     // проходимся по массиву кораблей . . .
     shipsCopy.map(ship => {
       if (ship.type === shipIsActive && ship.left > 0) {
