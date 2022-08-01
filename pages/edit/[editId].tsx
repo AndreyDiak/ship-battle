@@ -426,7 +426,7 @@ type FieldBlockProp = {
   mouseOver: () => void
 }
 
-const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockProp) => {
+const FieldBlock = (React.memo(({ field, click, active, mouseOver }: FieldBlockProp) => {
 
   return (
     <>
@@ -445,7 +445,7 @@ const FieldBlock = React.memo(({ field, click, active, mouseOver }: FieldBlockPr
       </button>
     </>
   )
-})
+}))
 
 
 export default EditPage

@@ -235,7 +235,7 @@ type RenderMyFieldProps = {
   fieldData: UserFields
 }
 
-const RenderMyField = React.memo(({ fieldData }: RenderMyFieldProps) => {
+const RenderMyField = (React.memo(({ fieldData }: RenderMyFieldProps) => {
 
   return <>
     {fieldData.field.map((field, index) =>
@@ -247,7 +247,7 @@ const RenderMyField = React.memo(({ fieldData }: RenderMyFieldProps) => {
       />
     )}
   </>
-})
+}))
 
 type RenderOppFieldProps = {
   fieldData: UserFields
@@ -255,7 +255,7 @@ type RenderOppFieldProps = {
   isMyTurn: boolean
 }
 
-const RenderOppField = React.memo(({ fieldData, handleClick, isMyTurn }: RenderOppFieldProps) => {
+const RenderOppField = (React.memo(({ fieldData, handleClick, isMyTurn }: RenderOppFieldProps) => {
   const [ableToClick, setAbleToClick] = useState(true);
 
   return <>
@@ -278,7 +278,7 @@ const RenderOppField = React.memo(({ fieldData, handleClick, isMyTurn }: RenderO
       )
     }
   </>
-})
+}))
 
 type RenderFieldBlock = {
   value: string
@@ -287,7 +287,7 @@ type RenderFieldBlock = {
   isShipDefeated: boolean
 }
 
-const RenderFieldBlock = React.memo(({ value, click, ableToClick, isShipDefeated }: RenderFieldBlock) => {
+const RenderFieldBlock = (React.memo(({ value, click, ableToClick, isShipDefeated }: RenderFieldBlock) => {
 
   return (
     <>
@@ -302,5 +302,5 @@ const RenderFieldBlock = React.memo(({ value, click, ableToClick, isShipDefeated
   )
 }
 )
-
+)
 
